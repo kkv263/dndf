@@ -1,15 +1,22 @@
-import { CHANGE_LEVEL, CHANGE_NAME } from './types';
+import { CHANGE_LEVEL, CHANGE_NAME, CHANGE_FORM } from './types';
 
-export const changeLevel  = (value) => dispatch => {
+export const changeLevel  = (level) => dispatch => {
    dispatch({
      type: CHANGE_LEVEL,
-     payload: value
+     payload: level
    });
 }
 
-export const changeName  = (value) => dispatch => {
+export const changeName  = (name) => dispatch => {
     dispatch({
       type: CHANGE_NAME,
-      payload: value
+      payload: name
     });
-  }
+}
+
+export const changeForm  = (value) => dispatch => {
+  dispatch({
+    type: CHANGE_FORM,
+    payload: value + 1
+  });
+}

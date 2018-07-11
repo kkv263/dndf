@@ -1,22 +1,16 @@
-import { CHANGE_LEVEL, CHANGE_NAME } from '../actions/types';
+import { CHANGE_FORM } from '../actions/types';
 
 const initialState = {
-  level: '',
-  name: ''
+  form: 0
 };
 
 export default function(state = initialState, action) {
   switch(action.type){
-    case CHANGE_LEVEL:
-      return {
-        ...state,
-        level: action.payload
-      };
 
-    case CHANGE_NAME:
+      case CHANGE_FORM:
       return {
         ...state,
-        name:action.payload
+        form:action.payload
       }
     default:
       return state;

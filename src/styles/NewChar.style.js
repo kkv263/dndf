@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 export const NewCharWrapper = styled.div`
 position:relative;
 text-align:center;
@@ -10,11 +9,14 @@ height:400px;
 box-shadow: 0 2px 4px #000;
 border-radius: 8px;
 border: 1px solid #979797;
+margin: auto;
+margin-top: 5%;
 `
 
 export const Text = styled.p`
 font-family: 'Roboto Mono', monospace;
 font-size: ${props => props.size};
+margin-top: ${props => props.mt};
 `
 
 export const BottomBar = styled.div`
@@ -62,8 +64,9 @@ margin-top: 5%;
 }
 `
 
-export const NextButton = styled.input`
+export const NextButton = styled.div`
 position: absolute;
+cursor:pointer;
 right: 1%;
 width:100px;
 height:40px;
@@ -72,3 +75,91 @@ background-color:#efefef;
 border:1px solid black;
 border-radius:8px;
 `
+
+export const RCWrapper = styled.div`
+display:flex;
+flex-direction:column;
+align-items:center;
+`
+
+export const ClassButtonContainer = styled.div`
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+width: 450px;
+margin-top:2.5%;
+`
+
+export const ClassButtonWrapper = styled.div`
+display:flex;
+margin-top:2%;
+justify-content:center;
+`
+
+export const IncDecButton = styled.div`
+width:20px;
+height:20px;
+background-color:#fede62;
+border-radius:8px;
+cursor:pointer;
+  &:hover{
+  background-color:#333333;
+  color:white;
+  }
+`
+
+export const ClassButton = styled.div`
+  margin-left:1%;
+  margin-right:1%;
+  border: 1px solid #333333;
+  color: #333333;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  width: 100px;
+  border-radius:8px; 
+  cursor:pointer;
+  &:hover{
+    background-color:#333333;
+    color:white;
+  }
+`
+
+export const Dropdown = {
+  control: (base,state) => ({
+    ...base,
+    outline: 0,
+    marginTop: '5%',
+    border: '1px solid #333333',
+    boxShadow: 'none',
+    '&:hover': {
+      border: '1px solid #333333'
+    }
+  }),
+  option: (base, state) => ({
+    ...base,
+    isFocused: 'red',
+    fontFamily:'Roboto Mono',
+    borderBottom: '1px dotted black',
+    padding: 5,
+    color: state.isFocused ? 'white' : 'black',
+    backgroundColor:state.isFocused ? '#333333' : 'white',
+  }),
+  container: (base,state) => ({
+    ...base,
+    width:'500px',
+    borderColor: state.isFocused ? 'red' : 'black', 
+  }),
+  menu: (base) => ({
+    ...base,
+    width: '500px',
+  }),
+  menuList: (base) =>  ({
+    ...base,
+    height: '130px'
+  }),
+  placeholder: (base) => ({
+    ...base,
+    fontFamily:'Roboto Mono',
+    opacity:'0.5'
+  }),
+};

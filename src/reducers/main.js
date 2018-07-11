@@ -1,8 +1,9 @@
 import {combineReducers} from 'redux';
 
 import formReducer from './formReducer';
+import infoReducer from './infoReducer';
 
 export default combineReducers({
-  radio:formReducer,
-  name:formReducer
+  info:infoReducer,
+  form:formReducer
 });
