@@ -1,7 +1,8 @@
-import { CHANGE_LEVEL } from '../actions/types';
+import { CHANGE_LEVEL, CHANGE_NAME } from '../actions/types';
 
 const initialState = {
-  level: ''
+  level: '',
+  name: ''
 };
 
 export default function(state = initialState, action) {
@@ -11,6 +12,12 @@ export default function(state = initialState, action) {
         ...state,
         level: action.payload
       };
+
+    case CHANGE_NAME:
+      return {
+        ...state,
+        name:action.payload
+      }
     default:
       return state;
   }

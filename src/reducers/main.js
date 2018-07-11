@@ -3,5 +3,6 @@ import {combineReducers} from 'redux';
 import formReducer from './formReducer';
 
 export default combineReducers({
-  radio:formReducer
+  radio:formReducer,
+  name:formReducer
 });

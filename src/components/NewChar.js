@@ -5,7 +5,7 @@ import races from '../data/races-sublist';
 import { Text, NewCharWrapper, BottomBar, NextButton, NameBar, LevelCheckBox } from '../styles/NewChar.style';
 
 import { connect } from 'react-redux';
-import { changeLevel } from '../actions/changeLevel';
+import { changeLevel, changeName} from '../actions/formActions';
 
 
 const racesOptions = []
@@ -26,11 +26,11 @@ class NewChar extends Component {
     }
     
   handleChange(event) {
-    this.setState({value:event.target.value});
+    this.props.changeName(event.target.value)
   }
     
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
+    alert('A name was submitted: ' + this.props.value);
     event.preventDefault();
   }
 
@@ -67,11 +67,13 @@ class NewChar extends Component {
 
 NewChar.propTypes = {
   changeLevel: propTypes.func.isRequired,
-  level: propTypes.string.isRequired
+  level: propTypes.string.isRequired,
+  name: propTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({
-  level: state.radio.level
+  level: state.radio.level,
+  name: state.name.name
 });
 
-export default connect(mapStateToProps, {changeLevel})(NewChar);
+export default connect(mapStateToProps, {changeLevel,changeName})(NewChar);
