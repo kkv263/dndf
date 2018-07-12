@@ -86,7 +86,7 @@ export const ClassButtonContainer = styled.div`
 display:flex;
 justify-content:space-between;
 flex-wrap:wrap;
-width: 450px;
+width: 500px;
 margin-top:2.5%;
 `
 
@@ -101,6 +101,7 @@ width:20px;
 height:20px;
 background-color:#fede62;
 border-radius:8px;
+visibility: ${props => props.show ? 'visible' : 'hidden'}
 cursor:pointer;
   &:hover{
   background-color:#333333;
@@ -112,14 +113,16 @@ export const ClassButton = styled.div`
   margin-left:1%;
   margin-right:1%;
   border: 1px solid #333333;
-  color: #333333;
+  border-radius:8px; 
+  color: ${props => props.selected? 'white' : '#333333'};
   font-family: 'Roboto Mono', monospace;
   font-size: 14px;
-  width: 100px;
+  width: 115px;
   border-radius:8px; 
+  background-color: ${props => props.selected? '#333333' : 'white'};
   cursor:pointer;
   &:hover{
-    background-color:#333333;
+    background-color: ${props => props.selected? '#333333' : '#979797'};
     color:white;
   }
 `
@@ -152,10 +155,6 @@ export const Dropdown = {
   menu: (base) => ({
     ...base,
     width: '500px',
-  }),
-  menuList: (base) =>  ({
-    ...base,
-    height: '130px'
   }),
   placeholder: (base) => ({
     ...base,

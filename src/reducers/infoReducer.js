@@ -1,11 +1,14 @@
-import { CHANGE_LEVEL, CHANGE_NAME} from '../actions/types';
+import { CHANGE_LEVEL, CHANGE_NAME, SELECT_BUTTON, INC_CLEVEL, DEC_CLEVEL, INC_TP} from '../actions/types';
 
 const initialState = {
   level: '',
   name: '',
+  classLevel : [0,0,0,0,0,0,0,0,0,0,0,0,0],
+  tp:0
 };
 
 export default function(state = initialState, action) {
+
   switch(action.type){
     case CHANGE_LEVEL:
       return {
@@ -19,6 +22,29 @@ export default function(state = initialState, action) {
         name:action.payload
       }
 
+    case SELECT_BUTTON:
+      return{
+        ...state,
+        classLevel:action.payload
+      }
+
+    case INC_CLEVEL:
+      return{
+        ...state,
+        classLevel:action.payload
+      }
+
+    case DEC_CLEVEL:
+      return{
+        ...state,
+        classLevel:action.payload
+      }
+    
+      case INC_TP:
+      return{
+        ...state,
+        tp:action.payload
+      }
     default:
       return state;
   }
