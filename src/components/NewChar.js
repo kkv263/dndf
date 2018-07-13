@@ -8,7 +8,7 @@ import classes from '../data/classes-list';
 
 import { connect } from 'react-redux';
 import { changeLevel, changeName,changeForm, selectButton, decClassLevel,incClassLevel,incTP} from '../actions/formActions';
-import { newCharGroup } from '../data/magic-items-list';
+import { newCharGroup, tier1_4 } from '../data/magic-items-list';
 
 const classButtons = []
 
@@ -97,7 +97,15 @@ class NewChar extends Component {
         <input onClick={this.handleRadioChange} name="level" type="radio" id="level3" color ="#000" value="e"/>
         <label style={{'color' : '#FFDD3F'}} htmlFor="level3">@Elite Noodle (Level 5)</label >
         </LevelCheckBox> 
-        <Select isClearable maxMenuHeight={155} styles ={Dropdown} placeholder={'Invest your TP into...'} options={newCharGroup} onChange={this.recordMagicItems}/>
+      {this.props.level === 'e' || this.props.level === 'j' ? 
+      (<Select isClearable maxMenuHeight={155} 
+        styles ={Dropdown} 
+        placeholder={'Invest your TP into...'} 
+      options={this.props.level === 'e' ? newCharGroup : tier1_4} 
+      onChange={this.recordMagicItems}/>) 
+      : null}
+
+        {this.props.tp >= 4 && this.props.tp <= 8 && this.props.level === 'e' ? (<Select isClearable maxMenuHeight={155} styles ={Dropdown} placeholder={'Invest your TP into...'} options={newCharGroup} onChange={this.recordMagicItems}/>) : null}
         <BottomBar>
           <Text>Character Creation</Text>
           <NextButton onClick={this.handleSubmit}>Next</NextButton>
