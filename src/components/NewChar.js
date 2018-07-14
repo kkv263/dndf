@@ -7,7 +7,8 @@ import {groupedOptions} from '../data/races-sublist';
 import classes from '../data/classes-list';
 
 import { connect } from 'react-redux';
-import { changeLevel, changeName,changeForm, selectButton, decClassLevel,incClassLevel} from '../actions/formActions';
+import { changeLevel, changeName,changeForm, checkForm } from '../actions/formActions';
+import { selectButton, decClassLevel,incClassLevel } from '../actions/classRaceFormActions';
 import { addMagicItem, resetMagicItems, setTP, setBarValue} from '../actions/magicItemActions';
 
 import { newCharGroup, tier1_4 } from '../data/magic-items-list';
@@ -36,7 +37,14 @@ class NewChar extends Component {
   }
     
   handleSubmit() {
-    this.props.changeForm(this.props.form)
+    if (this.props.name === '' || this.props.level === '' ||
+        (this.props.tp === 0 && this.props.level !== '1')){
+      this.props.checkForm(false);
+    }
+    else{
+      this.props.checkForm(true);
+      this.props.changeForm(this.props.form)
+    }
   }
 
   handleRadioChange(event){
@@ -59,17 +67,19 @@ class NewChar extends Component {
       limit = 3
     else if (this.props.level === 'e')
       limit = 5
-
-
     
+    
+
     if(operator === -1)
       this.props.decClassLevel(this.props.classLevel,classIndex);
+
+      //not game breaking but you can try to fix max level toggle class button
     
-    if (total < limit || limit === 1) {
+    if (total < limit || (this.props.classLevel[classIndex] === 1 && limit === 1)) {
       if (operator === 1)
         this.props.incClassLevel(this.props.classLevel, classIndex);
-      if (operator === 0)
-        this.props.selectButton(this.props.classLevel, classIndex);
+      if (operator === 0 )
+        this.props.selectButton(this.props.classLevel, classIndex)
     }
   }
 
@@ -82,7 +92,6 @@ class NewChar extends Component {
 
   render() {
     let formState = ""
-    console.log(this.props.magicItemsOwned);
 
     let classButtonsObject = classButtons.map((classItem, i) => {
       return (<ClassButtonWrapper key={i}>
@@ -96,17 +105,18 @@ class NewChar extends Component {
       case 0: 
       formState = (<form>
         <NameBar placeholder= "Name" type="text" value={this.props.name} onChange={this.handleChange} />
+        {!this.props.isFormValid && this.props.name === "" ? <Text size= {'12px'} error >Please enter a name</Text> : null}
         <LevelCheckBox>
         <Text> And this character is...</Text>
         <input onClick={this.handleRadioChange} name="level" type="radio" id="level1" value="1"/>
         <label  htmlFor="level1" >Level 1</label>
         <input onClick={this.handleRadioChange} name="level" type="radio" id="level2" value="j"/>
-        <label style={{'color' : '#689EFF'}} htmlFor="level2" value="j">@Journeyfriend (Level 3)</label >
+        <label style={{'color' : '#689EFF'}} htmlFor="level2" value="j">@Journeyfriend (Level 3, 4TP)</label >
         <input onClick={this.handleRadioChange} name="level" type="radio" id="level3" color ="#000" value="e"/>
-        <label style={{'color' : '#FFDD3F'}} htmlFor="level3">@Elite Noodle (Level 5)</label >
+        <label style={{'color' : '#FFDD3F'}} htmlFor="level3">@Elite Noodle (Level 5, 8TP)</label >
         </LevelCheckBox> 
+        {!this.props.isFormValid && this.props.level === "" ? <Text size= {'12px'} error >Please pick your starting level</Text> : null} 
         <MagicItemMenuContainer>
-
           {this.props.level === 'e' || this.props.level === 'j' ? 
           (<Select isClearable maxMenuHeight={155} 
           styles ={Dropdown} 
@@ -122,6 +132,9 @@ class NewChar extends Component {
           options={tier1_4} onChange={(value) => this.recordMagicItems(value,1)}/>) : null}
 
         </MagicItemMenuContainer>
+        {!this.props.isFormValid && 
+          ((this.props.level === 'e' && this.props.tp < 8) || 
+          (this.props.level === 'j' && this.props.tp < 4 )) ? <Text size= {'12px'} error >Please choose an item to invest TP in</Text> : null}
         <BottomBar>
           <Text>Character Creation</Text>
           <NextButton onClick={this.handleSubmit}>Next</NextButton>
@@ -165,7 +178,8 @@ NewChar.propTypes = {
   classLevel: propTypes.array.isRequired,
   tp:propTypes.number.isRequired,
   magicItemsOwned: propTypes.array.isRequired,
-  bar1value: propTypes.string.isRequired
+  bar1value: propTypes.object.isRequired,
+  isFormValid: propTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -175,9 +189,10 @@ const mapStateToProps = state => ({
   classLevel: state.info.classLevel,
   tp: state.magicItems.tp,
   magicItemsOwned: state.magicItems.magicItemsOwned,
-  bar1value: state.magicItems.bar1value
+  bar1value: state.magicItems.bar1value,
+  isFormValid: state.form.isFormValid
 });
 
 export default connect(mapStateToProps, {changeLevel,changeName,changeForm,selectButton,
-  decClassLevel,incClassLevel,addMagicItem,resetMagicItems, setTP, setBarValue})(NewChar);
+  decClassLevel,incClassLevel,addMagicItem,resetMagicItems, setTP, setBarValue, checkForm})(NewChar);
 

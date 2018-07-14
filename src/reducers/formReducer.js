@@ -1,7 +1,8 @@
-import { CHANGE_FORM } from '../actions/types';
+import { CHANGE_FORM, CHECK_FORM} from '../actions/types';
 
 const initialState = {
-  form: 0
+  form: 0,
+  isFormValid: true 
 };
 
 export default function(state = initialState, action) {
@@ -12,7 +13,14 @@ export default function(state = initialState, action) {
         ...state,
         form:action.payload
       }
-    default:
+
+      case CHECK_FORM:
+      return{
+        ...state,
+        isFormValid: action.payload
+      }
+
+      default:
       return state;
   }
 }

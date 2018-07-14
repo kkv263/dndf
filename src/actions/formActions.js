@@ -1,4 +1,4 @@
-import { CHANGE_LEVEL, CHANGE_NAME, CHANGE_FORM, SELECT_BUTTON, INC_CLEVEL, DEC_CLEVEL } from './types';
+import { CHANGE_LEVEL, CHANGE_NAME, CHANGE_FORM, CHECK_FORM} from './types'; 
 
 export const changeLevel  = (level) => dispatch => {
    dispatch({
@@ -21,40 +21,10 @@ export const changeForm  = (value) => dispatch => {
   });
 }
 
-export const selectButton = (value, index) => dispatch => {
-  
-  var flip = 0
-  if (value[index] === 0) {
-    flip = 1
-  }
-
-  var newArray = Object.assign([...value], {[index]:flip })
-
+export const checkForm = (value) => dispatch => {
   dispatch({
-    type: SELECT_BUTTON,
-    payload:newArray
-  }); 
+    type: CHECK_FORM,
+    payload: value
+  });
 }
-
-export const incClassLevel = (value, index) => dispatch => {
-  var inc = 1 + value[index]
-  var newArray = Object.assign([...value], {[index]:inc})
-
-  dispatch({
-    type: INC_CLEVEL,
-    payload:newArray
-  }); 
-}
-
-export const decClassLevel = (value, index) => dispatch => {
-  var dec = value[index] - 1
-  var newArray = Object.assign([...value], {[index]:dec})
-
-  dispatch({
-    type: DEC_CLEVEL,
-    payload:newArray
-  }); 
-}
-
-
 

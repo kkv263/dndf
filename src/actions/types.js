@@ -11,4 +11,5 @@ export const RESET_TP = 'RESET_TP';
 export const ADD_MAGIC_ITEM = 'ADD_MAGIC_ITEM';
 export const DEL_MAGIC_ITEM = 'DEL_MAGIC_ITEM';
 export const RESET_MAGIC_ITEM = 'RESET_MAGIC_ITEM';
-export const SET_BAR1 = 'SET_BAR1'
+export const SET_BAR1 = 'SET_BAR1';
+export const CHECK_FORM = 'CHECK_FORM';

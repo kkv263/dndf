@@ -17,6 +17,7 @@ export const Text = styled.p`
 font-family: 'Roboto Mono', monospace;
 font-size: ${props => props.size};
 margin-top: ${props => props.mt};
+color: ${props => props.error ? 'red' : 'black'};
 `
 
 export const BottomBar = styled.div`
@@ -44,7 +45,7 @@ text-indent: 1%;
 `
 
 export const LevelCheckBox = styled.div`
-margin-top: 5%;
+margin-top: 2.5%;
 & > input[type="radio"] {
     display:none;
 }
