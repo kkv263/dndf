@@ -127,6 +127,12 @@ export const ClassButton = styled.div`
   }
 `
 
+export const MagicItemMenuContainer = styled.div`
+display:flex;
+flex-direction:column;
+align-items:center;
+
+`
 export const Dropdown = {
   control: (base,state) => ({
     ...base,

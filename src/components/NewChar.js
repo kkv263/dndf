@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import propTypes from 'prop-types';
 import {Text, NewCharWrapper, BottomBar, NextButton, 
-  NameBar, LevelCheckBox, Dropdown, ClassButton, ClassButtonContainer, RCWrapper, IncDecButton, ClassButtonWrapper} from '../styles/NewChar.style';
+  NameBar, LevelCheckBox, Dropdown, ClassButton, ClassButtonContainer, RCWrapper, IncDecButton, ClassButtonWrapper, MagicItemMenuContainer} from '../styles/NewChar.style';
 import Select from "react-select";
 import {groupedOptions} from '../data/races-sublist';
 import classes from '../data/classes-list';
 
 import { connect } from 'react-redux';
-import { changeLevel, changeName,changeForm, selectButton, decClassLevel,incClassLevel,incTP} from '../actions/formActions';
+import { changeLevel, changeName,changeForm, selectButton, decClassLevel,incClassLevel} from '../actions/formActions';
+import { addMagicItem, resetMagicItems, setTP, setBarValue} from '../actions/magicItemActions';
+
 import { newCharGroup, tier1_4 } from '../data/magic-items-list';
 
 const classButtons = []
@@ -38,7 +40,11 @@ class NewChar extends Component {
   }
 
   handleRadioChange(event){
+    this.props.resetMagicItems();
     this.props.changeLevel(event.target.value);
+    this.props.setTP({})
+    this.props.setBarValue(null);
+
   }
 
   changeClassLevel(classIndex,operator){
@@ -66,15 +72,16 @@ class NewChar extends Component {
     }
   }
 
-  recordMagicItems(value){
-    if (value !== null)
-      this.props.incTP(this.props.tp,value.tp);
+  recordMagicItems(value,bar){
+    this.props.addMagicItem(this.props.magicItemsOwned,value,bar);
+    this.props.setTP(this.props.magicItemsOwned)
+    if (bar === 0 )
+      this.props.setBarValue(value)
   }
 
   render() {
     let formState = ""
-    let classLevelArray = this.props.classLevel
-    console.log(classLevelArray);
+    console.log(this.props.magicItemsOwned);
 
     let classButtonsObject = classButtons.map((classItem, i) => {
       return (<ClassButtonWrapper key={i}>
@@ -97,15 +104,23 @@ class NewChar extends Component {
         <input onClick={this.handleRadioChange} name="level" type="radio" id="level3" color ="#000" value="e"/>
         <label style={{'color' : '#FFDD3F'}} htmlFor="level3">@Elite Noodle (Level 5)</label >
         </LevelCheckBox> 
-      {this.props.level === 'e' || this.props.level === 'j' ? 
-      (<Select isClearable maxMenuHeight={155} 
-        styles ={Dropdown} 
-        placeholder={'Invest your TP into...'} 
-      options={this.props.level === 'e' ? newCharGroup : tier1_4} 
-      onChange={this.recordMagicItems}/>) 
-      : null}
+        <MagicItemMenuContainer>
 
-        {this.props.tp >= 4 && this.props.tp <= 8 && this.props.level === 'e' ? (<Select isClearable maxMenuHeight={155} styles ={Dropdown} placeholder={'Invest your TP into...'} options={newCharGroup} onChange={this.recordMagicItems}/>) : null}
+          {this.props.level === 'e' || this.props.level === 'j' ? 
+          (<Select isClearable maxMenuHeight={155} 
+          styles ={Dropdown} 
+          value = {this.props.bar1value}
+          placeholder={'Invest your TP into...'} 
+          options={this.props.level === 'e' && this.props.tp < 8 ? newCharGroup : tier1_4} 
+          onChange={(value) => this.recordMagicItems(value,0)}/>) 
+          : null}
+
+          {(this.props.tp !== 8 || this.props.magicItemsOwned.length !== 1) && this.props.level === 'e' ? (
+          <Select isClearable maxMenuHeight={155} 
+          styles ={Dropdown} placeholder={'Invest your TP into...'} 
+          options={tier1_4} onChange={(value) => this.recordMagicItems(value,1)}/>) : null}
+
+        </MagicItemMenuContainer>
         <BottomBar>
           <Text>Character Creation</Text>
           <NextButton onClick={this.handleSubmit}>Next</NextButton>
@@ -147,7 +162,9 @@ NewChar.propTypes = {
   name: propTypes.string.isRequired,
   form: propTypes.number.isRequired,
   classLevel: propTypes.array.isRequired,
-  tp:propTypes.number.isRequired
+  tp:propTypes.number.isRequired,
+  magicItemsOwned: propTypes.array.isRequired,
+  bar1value: propTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -155,7 +172,11 @@ const mapStateToProps = state => ({
   name: state.info.name,
   form: state.form.form,
   classLevel: state.info.classLevel,
-  tp: state.info.tp
+  tp: state.magicItems.tp,
+  magicItemsOwned: state.magicItems.magicItemsOwned,
+  bar1value: state.magicItems.bar1value
 });
 
-export default connect(mapStateToProps, {changeLevel,changeName,changeForm,selectButton,decClassLevel,incClassLevel,incTP})(NewChar);
+export default connect(mapStateToProps, {changeLevel,changeName,changeForm,selectButton,
+  decClassLevel,incClassLevel,addMagicItem,resetMagicItems, setTP, setBarValue})(NewChar);
+

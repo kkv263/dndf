@@ -1,4 +1,4 @@
-import { CHANGE_LEVEL, CHANGE_NAME, CHANGE_FORM, SELECT_BUTTON, INC_CLEVEL, DEC_CLEVEL, INC_TP } from './types';
+import { CHANGE_LEVEL, CHANGE_NAME, CHANGE_FORM, SELECT_BUTTON, INC_CLEVEL, DEC_CLEVEL } from './types';
 
 export const changeLevel  = (level) => dispatch => {
    dispatch({
@@ -56,9 +56,5 @@ export const decClassLevel = (value, index) => dispatch => {
   }); 
 }
 
-export const incTP = (value, addValue) => dispatch => {
-  dispatch({
-    type: INC_TP,
-    payload: value + addValue
-  })
-}
+
+
