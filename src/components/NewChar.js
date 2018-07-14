@@ -60,8 +60,7 @@ class NewChar extends Component {
     else if (this.props.level === 'e')
       limit = 5
 
-     if (operator === 0)
-      this.props.selectButton(this.props.classLevel, classIndex);
+
     
     if(operator === -1)
       this.props.decClassLevel(this.props.classLevel,classIndex);
@@ -69,6 +68,8 @@ class NewChar extends Component {
     if (total < limit || limit === 1) {
       if (operator === 1)
         this.props.incClassLevel(this.props.classLevel, classIndex);
+      if (operator === 0)
+        this.props.selectButton(this.props.classLevel, classIndex);
     }
   }
 
@@ -132,7 +133,7 @@ class NewChar extends Component {
       formState = (
       <RCWrapper>
         <Select maxMenuHeight={155} styles ={Dropdown} placeholder={'Select a race...'} options={groupedOptions}  />
-        <Text mt={'2.5%'}>Pick a class (or multiple)</Text>
+        <Text mt={'2.5%'}>Pick a class (or multiclass)</Text>
           <ClassButtonContainer>
           {classButtonsObject}
           </ClassButtonContainer>
