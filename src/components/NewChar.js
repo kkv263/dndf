@@ -107,13 +107,13 @@ class NewChar extends Component {
       formState = (<form>
         <NameBar placeholder= "Name" type="text" value={this.props.name} onChange={this.handleChange} />
         {!this.props.isFormValid && this.props.name === "" ? <Text size= {'12px'} error >Please enter a name</Text> : null}
-        <LevelCheckBox>
-        <Text> And this character is...</Text>
-        <input onClick={this.handleRadioChange} name="level" type="radio" id="level1" value='1'/>
-        <label  htmlFor="level1" >Level 1</label>
-        <input onClick={this.handleRadioChange} name="level" type="radio" id="level2" value='3'/>
+        <Text mt={'1.5%'}> And this character is...</Text>
+        <LevelCheckBox onClick={this.handleRadioChange}>
+        <input name="level" type="radio" id="level1" value='1'/>
+        <label htmlFor="level1" >Level 1</label>
+        <input name="level" type="radio" id="level2" value='3'/>
         <label style={{'color' : '#689EFF'}} htmlFor="level2" value='3' >@Journeyfriend (Level 3, 4TP)</label >
-        <input onClick={this.handleRadioChange} name="level" type="radio" id="level3" color ="#000" value='5'/>
+        <input name="level" type="radio" id="level3" color ="#000" value='5'/>
         <label style={{'color' : '#FFDD3F'}} htmlFor="level3">@Elite Noodle (Level 5, 8TP)</label >
         </LevelCheckBox> 
         {!this.props.isFormValid && this.props.level === 0 ? <Text size= {'12px'} error >Please pick your starting level</Text> : null} 

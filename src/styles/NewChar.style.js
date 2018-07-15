@@ -45,7 +45,7 @@ text-indent: 1%;
 `
 
 export const LevelCheckBox = styled.div`
-margin-top: 3.5%;
+margin-top: 1.5%;
 & > input[type="radio"] {
     display:none;
 }
