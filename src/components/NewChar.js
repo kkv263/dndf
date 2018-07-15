@@ -4,22 +4,16 @@ import {Text, NewCharWrapper, BottomBar, NextButton,
   NameBar, LevelCheckBox, Dropdown, ClassButton, ClassButtonContainer, RCWrapper, IncDecButton, ClassButtonWrapper, MagicItemMenuContainer} from '../styles/NewChar.style';
 import Select from "react-select";
 import {groupedOptions} from '../data/races-sublist';
-import classes from '../data/classes-list';
 
 import { connect } from 'react-redux';
 import { changeLevel, changeName,changeForm, checkForm } from '../actions/formActions';
-import { selectButton, decClassLevel,incClassLevel } from '../actions/classRaceFormActions';
+import { selectButton, decClassLevel,incClassLevel, setRace } from '../actions/classRaceFormActions';
 import { addMagicItem, resetMagicItems, setTP, setBarValue} from '../actions/magicItemActions';
 
 import { newCharGroup, tier1_4 } from '../data/magic-items-list';
 
-const classButtons = []
-
-Object.keys(classes).forEach(key =>
-  {
-    classButtons.push(classes[key])
-  })
-
+const classButtons = ["Artificer","Barbarian","Bard","Cleric","Fighter",
+"Monk","Paladin","Ranger","Rev. Ranger","Rogue","Sorcerer","Warlock","Wizard"]
 
 class NewChar extends Component {
   constructor(props) {
@@ -30,17 +24,31 @@ class NewChar extends Component {
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.changeClassLevel = this.changeClassLevel.bind(this);
     this.recordMagicItems = this.recordMagicItems.bind(this);
+    this.recordRace = this.recordRace.bind(this);
     }
     
   handleChange(event) {
     this.props.changeName(event.target.value)
   }
+
+  calcLevels(levelArray) {
+    var total = 0
+    for (var i = 0; i <levelArray.length; i++){
+      total += levelArray[i];
+    }
+
+    return total
+  }
     
   handleSubmit() {
-    if (this.props.name === '' || this.props.level === '' ||
-        (this.props.tp === 0 && this.props.level !== '1')){
+    if (this.props.form === 0 && (this.props.name === '' || this.props.level === 0 ||
+        (this.props.tp === 0 && this.props.level !== 1))){
       this.props.checkForm(false);
     }
+    else if (this.props.form === 1 && 
+      (this.calcLevels(this.props.classLevel) !== this.props.level || this.props.race === '')) {
+        this.props.checkForm(false);
+      }
     else{
       this.props.checkForm(true);
       this.props.changeForm(this.props.form)
@@ -49,26 +57,15 @@ class NewChar extends Component {
 
   handleRadioChange(event){
     this.props.resetMagicItems();
-    this.props.changeLevel(event.target.value);
+    this.props.changeLevel(parseInt(event.target.value, 10));
     this.props.setTP({})
     this.props.setBarValue(null);
 
   }
 
   changeClassLevel(classIndex,operator){
-    var total = 0
-    var limit = 0
-    for (var i = 0; i <this.props.classLevel.length; i++){
-      total += this.props.classLevel[i];
-    }
-    if (this.props.level === '1')
-      limit = 1
-    else if (this.props.level ==='j')
-      limit = 3
-    else if (this.props.level === 'e')
-      limit = 5
-    
-    
+    var total = this.calcLevels(this.props.classLevel)
+    var limit = this.props.level
 
     if(operator === -1)
       this.props.decClassLevel(this.props.classLevel,classIndex);
@@ -90,14 +87,18 @@ class NewChar extends Component {
       this.props.setBarValue(value)
   }
 
+  recordRace(value){
+    this.props.setRace(value);
+  }
+
   render() {
     let formState = ""
 
     let classButtonsObject = classButtons.map((classItem, i) => {
       return (<ClassButtonWrapper key={i}>
-              <IncDecButton show={this.props.level !== '1' && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,-1)}>–</IncDecButton>
+              <IncDecButton show={this.props.level !== 1 && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,-1)}>–</IncDecButton>
               <ClassButton selected={this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,0)}>{classItem} {this.props.classLevel[i]}</ClassButton>
-              <IncDecButton show={this.props.level !== '1'&& this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,1)}>+</IncDecButton>
+              <IncDecButton show={this.props.level !== 1 && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,1)}>+</IncDecButton>
               </ClassButtonWrapper>)
     });
 
@@ -108,33 +109,33 @@ class NewChar extends Component {
         {!this.props.isFormValid && this.props.name === "" ? <Text size= {'12px'} error >Please enter a name</Text> : null}
         <LevelCheckBox>
         <Text> And this character is...</Text>
-        <input onClick={this.handleRadioChange} name="level" type="radio" id="level1" value="1"/>
+        <input onClick={this.handleRadioChange} name="level" type="radio" id="level1" value='1'/>
         <label  htmlFor="level1" >Level 1</label>
-        <input onClick={this.handleRadioChange} name="level" type="radio" id="level2" value="j"/>
-        <label style={{'color' : '#689EFF'}} htmlFor="level2" value="j">@Journeyfriend (Level 3, 4TP)</label >
-        <input onClick={this.handleRadioChange} name="level" type="radio" id="level3" color ="#000" value="e"/>
+        <input onClick={this.handleRadioChange} name="level" type="radio" id="level2" value='3'/>
+        <label style={{'color' : '#689EFF'}} htmlFor="level2" value='3' >@Journeyfriend (Level 3, 4TP)</label >
+        <input onClick={this.handleRadioChange} name="level" type="radio" id="level3" color ="#000" value='5'/>
         <label style={{'color' : '#FFDD3F'}} htmlFor="level3">@Elite Noodle (Level 5, 8TP)</label >
         </LevelCheckBox> 
-        {!this.props.isFormValid && this.props.level === "" ? <Text size= {'12px'} error >Please pick your starting level</Text> : null} 
+        {!this.props.isFormValid && this.props.level === 0 ? <Text size= {'12px'} error >Please pick your starting level</Text> : null} 
         <MagicItemMenuContainer>
-          {this.props.level === 'e' || this.props.level === 'j' ? 
+          {this.props.level === 5 || this.props.level === 3 ? 
           (<Select isClearable maxMenuHeight={155} 
           styles ={Dropdown} 
           value = {this.props.bar1value}
           placeholder={'Invest your TP into...'} 
-          options={this.props.level === 'e' && this.props.tp < 8 ? newCharGroup : tier1_4} 
+          options={this.props.level === 5 && this.props.tp < 8 ? newCharGroup : tier1_4} 
           onChange={(value) => this.recordMagicItems(value,0)}/>) 
           : null}
 
-          {(this.props.tp !== 8 || this.props.magicItemsOwned.length !== 1) && this.props.level === 'e' ? (
+          {(this.props.tp !== 8 || this.props.magicItemsOwned.length !== 1) && this.props.level === 5 ? (
           <Select isClearable maxMenuHeight={155} 
           styles ={Dropdown} placeholder={'Invest your TP into...'} 
           options={tier1_4} onChange={(value) => this.recordMagicItems(value,1)}/>) : null}
 
         </MagicItemMenuContainer>
         {!this.props.isFormValid && 
-          ((this.props.level === 'e' && this.props.tp < 8) || 
-          (this.props.level === 'j' && this.props.tp < 4 )) ? <Text size= {'12px'} error >Please choose an item to invest TP in</Text> : null}
+          ((this.props.level === 5 && this.props.tp < 8) || 
+          (this.props.level === 3 && this.props.tp < 4 )) ? <Text size= {'12px'} error >Please choose an item to invest TP in</Text> : null}
         <BottomBar>
           <Text>Character Creation</Text>
           <NextButton onClick={this.handleSubmit}>Next</NextButton>
@@ -145,15 +146,16 @@ class NewChar extends Component {
       case 1:
       formState = (
       <RCWrapper>
-        <Select maxMenuHeight={155} styles ={Dropdown} placeholder={'Select a race...'} options={groupedOptions}  />
+        <Select maxMenuHeight={155} styles ={Dropdown} placeholder={'Select a race...'} options={groupedOptions} onChange={value => this.recordRace(value)} />
+        {!this.props.isFormValid && this.props.race === '' ? <Text size= {'12px'} error >Please pick your race</Text> : null} 
         <Text mt={'2.5%'}>Pick a class (or multiclass)</Text>
           <ClassButtonContainer>
           {classButtonsObject}
           </ClassButtonContainer>
+          {(!this.props.isFormValid && (this.calcLevels(this.props.classLevel) !== this.props.level)) ? <Text size= {'12px'} error >Your levels don't add up</Text> : null} 
         <BottomBar>
           <Text>Character Creation</Text>
           <NextButton onClick={this.handleSubmit}>Next</NextButton>
-          
         </BottomBar>
       </RCWrapper>
       )
@@ -178,8 +180,8 @@ NewChar.propTypes = {
   classLevel: propTypes.array.isRequired,
   tp:propTypes.number.isRequired,
   magicItemsOwned: propTypes.array.isRequired,
-  bar1value: propTypes.object.isRequired,
-  isFormValid: propTypes.bool.isRequired
+  isFormValid: propTypes.bool.isRequired,
+  race: propTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -190,9 +192,11 @@ const mapStateToProps = state => ({
   tp: state.magicItems.tp,
   magicItemsOwned: state.magicItems.magicItemsOwned,
   bar1value: state.magicItems.bar1value,
-  isFormValid: state.form.isFormValid
+  isFormValid: state.form.isFormValid,
+  race: state.info.race
 });
 
 export default connect(mapStateToProps, {changeLevel,changeName,changeForm,selectButton,
-  decClassLevel,incClassLevel,addMagicItem,resetMagicItems, setTP, setBarValue, checkForm})(NewChar);
+  decClassLevel,incClassLevel,addMagicItem,resetMagicItems, setTP, setBarValue, 
+  checkForm,setRace})(NewChar);
 

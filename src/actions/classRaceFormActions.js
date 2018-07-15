@@ -1,4 +1,4 @@
-import {SELECT_BUTTON, INC_CLEVEL, DEC_CLEVEL } from './types';
+import {SELECT_BUTTON, INC_CLEVEL, DEC_CLEVEL, SET_RACE } from './types';
 export const selectButton = (value, index) => dispatch => {
   
   var flip = 0
@@ -33,3 +33,10 @@ export const decClassLevel = (value, index) => dispatch => {
     payload:newArray
   }); 
 }
+
+export const setRace = (value) => dispatch => {
+    dispatch({
+      type: SET_RACE,
+      payload:value
+    })
+  }

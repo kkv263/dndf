@@ -13,3 +13,4 @@ export const DEL_MAGIC_ITEM = 'DEL_MAGIC_ITEM';
 export const RESET_MAGIC_ITEM = 'RESET_MAGIC_ITEM';
 export const SET_BAR1 = 'SET_BAR1';
 export const CHECK_FORM = 'CHECK_FORM';
+export const SET_RACE = 'SET_RACE';

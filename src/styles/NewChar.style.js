@@ -5,7 +5,7 @@ position:relative;
 text-align:center;
 max-width:800px;
 min-width:500px;
-height:400px;
+height:450px;
 box-shadow: 0 2px 4px #000;
 border-radius: 8px;
 border: 1px solid #979797;
@@ -45,7 +45,7 @@ text-indent: 1%;
 `
 
 export const LevelCheckBox = styled.div`
-margin-top: 2.5%;
+margin-top: 3.5%;
 & > input[type="radio"] {
     display:none;
 }

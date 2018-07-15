@@ -3,7 +3,7 @@ import { ADD_MAGIC_ITEM, RESET_MAGIC_ITEM, SET_TP, SET_BAR1} from '../actions/ty
 const initialState = {
   magicItemsOwned: [],
   tp:0,
-  bar1value: null 
+  bar1value: {}
 };
 
 export default function(state = initialState, action) {
