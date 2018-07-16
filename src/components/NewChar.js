@@ -29,7 +29,7 @@ class NewChar extends Component {
     
   handleChange(event) {
     this.props.changeName(event.target.value)
-  }
+ }
 
   calcLevels(levelArray) {
     var total = 0
@@ -94,13 +94,7 @@ class NewChar extends Component {
   render() {
     let formState = ""
 
-    let classButtonsObject = classButtons.map((classItem, i) => {
-      return (<ClassButtonWrapper key={i}>
-              <IncDecButton show={this.props.level !== 1 && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,-1)}>–</IncDecButton>
-              <ClassButton selected={this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,0)}>{classItem} {this.props.classLevel[i]}</ClassButton>
-              <IncDecButton show={this.props.level !== 1 && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,1)}>+</IncDecButton>
-              </ClassButtonWrapper>)
-    });
+    
 
     switch(this.props.form){
       case 0: 
@@ -123,7 +117,7 @@ class NewChar extends Component {
           styles ={Dropdown} 
           value = {this.props.bar1value}
           placeholder={'Invest your TP into...'} 
-          options={this.props.level === 5 && this.props.tp < 8 ? newCharGroup : tier1_4} 
+          options={newCharGroup} 
           onChange={(value) => this.recordMagicItems(value,0)}/>) 
           : null}
 
@@ -144,6 +138,14 @@ class NewChar extends Component {
       break;
 
       case 1:
+      let classButtonsObject = classButtons.map((classItem, i) => {
+        return (<ClassButtonWrapper key={i}>
+                <IncDecButton show={this.props.level !== 1 && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,-1)}>–</IncDecButton>
+                <ClassButton selected={this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,0)}>{classItem} {this.props.classLevel[i]}</ClassButton>
+                <IncDecButton show={this.props.level !== 1 && this.props.classLevel[i]} onClick={() => this.changeClassLevel(i,1)}>+</IncDecButton>
+                </ClassButtonWrapper>)
+      });
+
       formState = (
       <RCWrapper>
         <Select maxMenuHeight={155} styles ={Dropdown} placeholder={'Select a race...'} options={groupedOptions} onChange={value => this.recordRace(value)} />
@@ -160,6 +162,22 @@ class NewChar extends Component {
       </RCWrapper>
       )
         break;
+      
+        case 2:
+
+        let classSpans = ""
+
+        classSpans = this.props.classLevel.map ((classItems, i) => {
+          return ( classItems !== 0 ? <span key={i}>{classButtons[i]} {classItems !== this.props.level ? classItems : null} </span> : null );
+        })
+
+        formState= (<div>
+          <Text>Creating {this.props.name}, 
+         Level {this.props.level} {this.props.race.label} {classSpans} {this.props.level === 3 ? '(Journeyfriend)' : ''}
+         {this.props.level === 5 ? '(Elite Noodle)' : ''}</Text>
+         <Text>{this.props.name} starts with.</Text>
+         </div>)
+        break;
       default:
         break;
     }
@@ -174,7 +192,7 @@ class NewChar extends Component {
 
 NewChar.propTypes = {
   changeLevel: propTypes.func.isRequired,
-  level: propTypes.string.isRequired,
+  level: propTypes.number.isRequired,
   name: propTypes.string.isRequired,
   form: propTypes.number.isRequired,
   classLevel: propTypes.array.isRequired,

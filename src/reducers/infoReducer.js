@@ -4,7 +4,7 @@ const initialState = {
   level: 0,
   name: '',
   classLevel : [0,0,0,0,0,0,0,0,0,0,0,0,0],
-  race: '',
+  race: {},
 };
 
 export default function(state = initialState, action) {
